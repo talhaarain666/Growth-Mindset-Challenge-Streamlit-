@@ -62,21 +62,21 @@ if uploaded_files:
             buffer = BytesIO()
             if conversion_type == "CSV":
                 data_frame.to_csv(buffer, index=False, encoding="utf-8")
-                file_name = file.name.replace(file_extension,".csv")
+                file_name = os.path.splitext(file.name)[0] + ".csv"
                 mime_type = "text/csv"
                 
             elif conversion_type == "Excel":
                 with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
                     data_frame.to_excel(writer, index=False)
-                file_name = file.name.replace(file_extension,".xlsx")
+                file_name = os.path.splitext(file.name)[0] + ".xlsx"
                 mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             buffer.seek(0)
 
             # Download File
             st.download_button(
-                label=f"Download {file.name} as {conversion_type}",
+                label=f"Download {file_name} as {conversion_type}",
                 data=buffer,
-                file_name=file.name,
+                file_name=file_name,
                 mime=mime_type
             )
 
